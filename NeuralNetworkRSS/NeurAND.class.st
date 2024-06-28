@@ -6,6 +6,7 @@ Class {
 
 { #category : #initialization }
 NeurAND >> initialize [ 
+  super initialize.
   self weights: #(1 1).
   self bias: -1.5.
   ^ self

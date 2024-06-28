@@ -21,6 +21,7 @@ NeurCOMP >> feed: inputs [
 
 { #category : #initialization }
 NeurCOMP >> initialize [ 
+  super initialize.
   notANeur := NeurNOT new.
   notBNeur := NeurNOT new.
   notAandBNeur := NeurAND new.

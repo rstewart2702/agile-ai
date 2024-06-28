@@ -48,7 +48,8 @@ Class {
 	#instVars : [
 		'weights',
 		'bias',
-		'learningRate'
+		'learningRate',
+		'activationFunction'
 	],
 	#category : #NeuralNetworkRSS
 }
@@ -471,7 +472,7 @@ Neuron >> feed: inputs [
     the inputs and the weights, and then the inner-product is 
     ""biased"" by adding in the bias."
     z := (inputs with: weights collect: [ :x :w | x * w ]) sum + bias.
-    ^ z > 0 ifTrue: [ 1 ] ifFalse: [ 0 ].
+    ^ activationFunction eval: z
 ]
 
 { #category : #'as yet unclassified' }
@@ -482,37 +483,49 @@ Neuron >> fixedWeights [
 { #category : #initialization }
 Neuron >> initialize [ 
   super initialize.
-  learningRate := 0.1
+  learningRate := 0.1.
+  self sigmoid
 ]
 
 { #category : #accessing }
 Neuron >> learningRate [
-
+  "Return the learning rate of the neuron."
 	^ learningRate
 ]
 
 { #category : #accessing }
-Neuron >> learningRate: aNumber [
+Neuron >> learningRate: aLearningRateAsFloat [
+  "Set the leraning rate of the neuron. The argument should be a small floating value.
+For example, 0.01."
 
-	learningRate := aNumber
+	learningRate := aLearningRateAsFloat
+]
+
+{ #category : #utility }
+Neuron >> sigmoid [
+  "Use the sigmoid activation function"
+  activationFunction := SigmoidAF new
+]
+
+{ #category : #stepping }
+Neuron >> step [
+  "Use the step activation function"
+  activationFunction := StepAF new.
 ]
 
 { #category : #'as yet unclassified' }
 Neuron >> train: inputs desiredOutput: desiredOutput [
-  | theError output newWeight |
+  | diff output delta |
   "What is the weight adjustment and bias adjustment supposed to achieve?"
   output := self feed: inputs.
-  theError := desiredOutput - output.
-  inputs 
-    withIndexDo: 
-      [ :anInput :index |
-	     "calculate new weight:
-	     adjust old weight by product of learningRate, input element anInput, and theError."
-	     newWeight := (weights at: index) + (learningRate * theError * anInput).
-	     "store the new weight"
-	     weights at: index put: newWeight. ].
-  "Adjust the bias by product of learningRate and theError."
-  bias := bias + (learningRate * theError).
+  diff := desiredOutput - output.
+  delta := diff * (activationFunction derivative: output).
+
+  inputs withIndexDo: 
+    [ :anInput :index |
+	    weights at: index put: ((weights at: index) + (learningRate * delta * anInput)) ].
+  bias := bias + (learningRate * delta)
+
 ]
 
 { #category : #accessing }

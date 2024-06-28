@@ -27,6 +27,7 @@ NeurCOMP >> feed: inputs [
 
 { #category : #initialization }
 NeurCOMP >> initialize [ 
+  "I think part of this boils down to whether or not the step messages belong here, or elsewhere.  This is structured to set up object-local variables for the needed neurons, instead of creating them as temporaries inside the feed: method.  So, the interface used to create these dependent Neurons is different than the one Bergel designed in the book."
   super initialize.
   notANeur := NeurNOT new step.
   notBNeur := NeurNOT new step.

@@ -41,6 +41,18 @@ PerceptronTest1 >> testAND [
 ]
 
 { #category : #tests }
+PerceptronTest1 >> testAND2 [
+  | p |
+  p := NeurAND new step.
+
+  self assert: (p feed: #(0 0)) equals: 0.
+  self assert: (p feed: #(0 1)) equals: 0.
+  self assert: (p feed: #(1 0)) equals: 0.
+  self assert: (p feed: #(1 1)) equals: 1.
+
+]
+
+{ #category : #tests }
 PerceptronTest1 >> testDigitalComparator [
   self assert: (locDigitalComparator feed: #(0 0)) equals: #(0 1 0).
   self assert: (locDigitalComparator feed: #(1 1)) equals: #(0 1 0).

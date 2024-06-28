@@ -1,3 +1,9 @@
+"
+This is a comparator, which uses Neurons, but it is not really itself a Neuron, is it?
+The confusing bit is that NeurCOMP actually delegates its work to several other Neurons, which work in something more like the traditional manner.
+
+NeurCOMP differs from the other Neurons in that its evaluation depends solely on a composite set of other Neurons of various kinds, like NeurNOR, NeurNOT, etc.  So, NeurCOMP itself does not need to be trained, or fiddled with, does it?
+"
 Class {
 	#name : #NeurCOMP,
 	#superclass : #Neuron,
@@ -22,10 +28,10 @@ NeurCOMP >> feed: inputs [
 { #category : #initialization }
 NeurCOMP >> initialize [ 
   super initialize.
-  notANeur := NeurNOT new.
-  notBNeur := NeurNOT new.
-  notAandBNeur := NeurAND new.
-  notBandANeur := NeurAND new.
-  norNeur := NeurNOR new.
+  notANeur := NeurNOT new step.
+  notBNeur := NeurNOT new step.
+  notAandBNeur := NeurAND new step.
+  notBandANeur := NeurAND new step.
+  norNeur := NeurNOR new step.
   ^ self
 ]

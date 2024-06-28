@@ -4,24 +4,15 @@ I am a Neuron/Perceptron.
 I have weights, and a bias
 I am fed inputs, to provide a value (with the feed: message)
 
+I also have an activation function, and there are two choices for the activation function:
+  choose a sigmoid activation function via message
+    sigmoid
+  OR
+  choose a step activation function via message 
+    step
 
-Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
-
-For the Class part:  State a one line summary. For example, ""I represent a paragraph of text"".
-
-For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.
-
-For the Collaborators Part: State my main collaborators and one line about how I interact with them. 
-
-Public API and Key Messages
-
-- message one   
-- message two 
-- (for bonus points) how to create instances.
-
-   One simple example is simply gorgeous.
- 
-Internal Representation and Key Implementation Points.
+The sigmoid activation function is continuous and differentiable everywhere, but the
+step activation function is NOT continuous, and is not differentiable at input of 0. 
 
     Instance Variables
 	bias:		a number

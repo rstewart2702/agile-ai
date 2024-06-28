@@ -475,7 +475,7 @@ Neuron >> fixedWeights [
 Neuron >> initialize [ 
   super initialize.
   learningRate := 0.1.
-  self sigmoid
+  self sigmoid  "Ah! so by default, we use the sigmoid activation function, eh?"
 ]
 
 { #category : #accessing }

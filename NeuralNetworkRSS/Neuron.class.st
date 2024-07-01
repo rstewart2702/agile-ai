@@ -449,6 +449,11 @@ the playground which invokes it, eh?"
 ^ g
 ]
 
+{ #category : #'accessing - private' }
+Neuron >> adjustDeltaWith: anError [
+  delta := anError * (activationFunction derivative: output).
+]
+
 { #category : #accessing }
 Neuron >> bias [ 
     "Return the bias of the neuron"

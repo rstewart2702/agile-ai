@@ -1,3 +1,17 @@
+"
+Regarding back-propagation:
+The enclosing NNetwork instance is designed to send the 
+  NeuronLayer>>#backwardPropagateError:
+message to its outputLayer.
+
+This starts the recursive process of propagating
+the error information back through the layers of the NNetwork.
+
+Each network layer is an instance of NeuronLayer,
+and ""knows"" about its adjacent, ""predecessor"" layer,
+and therefore recursively sends the backwardPropagateError to
+its previousLayer (i.e., the ""preceding"" layer.)
+"
 Class {
 	#name : #NeuronLayer,
 	#superclass : #Object,
@@ -8,6 +22,44 @@ Class {
 	],
 	#category : #NeuralNetworkRSS
 }
+
+{ #category : #evaluation }
+NeuronLayer >> backwardPropagateError [
+  "This is a recursive method.  The backpropagation begins with the output layer, i.e., the last layer."
+  "We are in a hidden layer."
+  neurons doWithIndex: 
+    [ :neuron :j |
+	   | theError |
+	   theError := 0.0.
+	   self nextLayer neurons do: 
+	     [ :nextNeuron |
+		    theError := theError + 
+		                ((nextNeuron weights at: j) * nextNeuron delta) ].
+	    neuron adjustDeltaWith: theError
+	 ].
+
+  self previousLayer notNil
+    ifTrue: [ self previousLayer backwardPropagateError ].
+]
+
+{ #category : #evaluation }
+NeuronLayer >> backwardPropagateError: expected [ 
+  "This is a recursive method.  The backpropagation begins with the output layer (i.e., the last layer.)"
+  "This is sort of an outer-shell method which then sends almost the same message to its previous
+   layer, which is why there is a version of the backwardPropagateError message which takes no
+   parameter.  This method primes the recursive pump, as it were."
+  "We are in the output layer:"
+  neurons with: expected do: 
+    [ :neuron :exp |
+	   | theError |
+	   theError := exp - neuron output.
+	   neuron adjustDeltaWith: theError ].
+
+  "We iterate:"
+  self previousLayer notNil
+  ifTrue: 
+    [ self previousLayer backwardPropagateError ].
+]
 
 { #category : #evaluation }
 NeuronLayer >> feed: someInputValues [

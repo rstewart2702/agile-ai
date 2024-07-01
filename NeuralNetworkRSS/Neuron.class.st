@@ -47,13 +47,16 @@ Class {
 
 { #category : #examples }
 Neuron class >> accuracyExample [
+"This was from Ch2 and was an important example about the and number of iterations
+needed to train a Perceptron.  Note the new addition below to reflect the 
+changes needed due to the Ch3 changes to Neuron."
   | learningCurve f r p anX anY trainedOutput nbOfGood nbOfTries g d realOutput w |
   learningCurve := OrderedCollection new.
   f := [ :x | (-2 * x) - 3 ].
   0 to: 2000 by: 10 do: 
     [ :nbOfTrained |
 	   r := Random new seed: 42.
-	   p := self new.
+	   p := self new step.  "Change is here:  added send of message step to the newly created Neuron."
 	   "p weights: #(1 2)."
 	   w := Array new: 2.
 	   w at: 1 put: 1. w at: 2 put: 2.
@@ -289,7 +292,7 @@ f := [ :x | (-2 * x) - 3 ].
 "Checking my Smalltalk reasoning:  we indeed want to create a Neuron1,
 and then tell it to do several things."
 "self assert: self equals: Neuron."
-p := self new.
+p := self new step.
 p weights: { 1 . 2 }.
 p bias: -1.
 r := Random new seed: seedNumber.
@@ -345,7 +348,7 @@ f := [ :x | (-2 * x) - 3 ].
 "Checking my Smalltalk reasoning:  we indeed want to create a Neuron1,
 and then tell it to do several things."
 "self assert: self equals: Neuron."
-p := self new.
+p := self new step.
 p weights: { 1 . 2 }.
 p bias: -1.
 r := Random new seed: seedNumber.
@@ -401,7 +404,7 @@ f := [ :x | (-2 * x) - 3 ].
 "Checking my Smalltalk reasoning:  we indeed want to create a Neuron1,
 and then tell it to do several things."
 "self assert: self equals: Neuron."
-p := self new.
+p := self new step.
 p weights: { 1 . 2 }.
 p bias: -1.
 r := Random new seed: seedNumber.

@@ -1,3 +1,14 @@
+"
+Regarding back-propagation:
+backward propagation of errors into a neural network starts with sending 
+message NNetwork>>#backwardPropagateError: as it is merely the 
+outermost ""shell"" which starts the (recursive) process of 
+backward propagation by sending backwardPropagateError: to the 
+outputLayer.
+
+So, that should make it clear that the propagation is working
+""backwards"" from the outputLayer, right?
+"
 Class {
 	#name : #NNetwork,
 	#superclass : #Object,
@@ -16,6 +27,15 @@ layers ifNotEmpty: [
 	aNeuronLayer previousLayer: layers last.
 	layers last nextLayer: aNeuronLayer ].
 layers add: aNeuronLayer.
+]
+
+{ #category : #evaluation }
+NNetwork >> backwardPropagateError: expectedOutputs [
+  "ExpectedOutputs corresponds to the outputs we are training the network against.
+   This starts backward-propagation by sending 
+     backwardPropagateError: expectedOutputs
+   to the outputLayer of the NNetwork."
+  self outputLayer backwardPropagateError: expectedOutputs.
 ]
 
 { #category : #configuration }
@@ -83,4 +103,10 @@ layers do: [ :l | l learningRate: aLearningRate ].
 NNetwork >> numberOfOutputs [
 "Return the number of outputs of the network."
 ^ layers last numberOfNeurons
+]
+
+{ #category : #accessing }
+NNetwork >> outputLayer [
+  "Return the output layer, which is also the last layer."
+  ^ layers last.
 ]

@@ -40,7 +40,9 @@ Class {
 		'weights',
 		'bias',
 		'learningRate',
-		'activationFunction'
+		'activationFunction',
+		'delta',
+		'output'
 	],
 	#category : #NeuralNetworkRSS
 }
@@ -459,6 +461,11 @@ Neuron >> bias: aNumber [
     bias := aNumber
 ]
 
+{ #category : #accessing }
+Neuron >> delta [
+	^ delta
+]
+
 { #category : #evaluation }
 Neuron >> feed: inputs [
     | z |
@@ -466,7 +473,8 @@ Neuron >> feed: inputs [
     the inputs and the weights, and then the inner-product is 
     ""biased"" by adding in the bias."
     z := (inputs with: weights collect: [ :x :w | x * w ]) sum + bias.
-    ^ activationFunction eval: z
+    output := activationFunction eval: z.
+    ^ output.
 ]
 
 { #category : #'as yet unclassified' }
@@ -493,6 +501,11 @@ Neuron >> learningRate: aLearningRateAsFloat [
 For example, 0.01."
 
 	learningRate := aLearningRateAsFloat
+]
+
+{ #category : #accessing }
+Neuron >> output [
+	^ output
 ]
 
 { #category : #utility }

@@ -110,3 +110,17 @@ NNetwork >> outputLayer [
   "Return the output layer, which is also the last layer."
   ^ layers last.
 ]
+
+{ #category : #training }
+NNetwork >> train: someInputs desiredOutputs: desiredOutputs [
+  "Train the neural network with a set of inputs and some expected output."
+  self feed: someInputs.
+  self backwardPropagateError: desiredOutputs.
+  self updateWeight: someInputs.
+]
+
+{ #category : #evaluation }
+NNetwork >> updateWeight: initialInputs [
+  "Update the weights of the neurons using the initial inputs."
+  layers first updateWeight: initialInputs.
+]

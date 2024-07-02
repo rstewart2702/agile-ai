@@ -450,8 +450,23 @@ the playground which invokes it, eh?"
 ]
 
 { #category : #'accessing - private' }
+Neuron >> adjustBias [
+  bias := bias + (learningRate * delta).
+]
+
+{ #category : #'accessing - private' }
 Neuron >> adjustDeltaWith: anError [
   delta := anError * (activationFunction derivative: output).
+]
+
+{ #category : #'accessing - private' }
+Neuron >> adjustWeightWithInput: inputs [
+  inputs withIndexDo:
+    [ :anInput :index |
+	   weights 
+	     at: index
+	     put: ((weights at: index) + (learningRate * delta * anInput))
+    ].
 ]
 
 { #category : #accessing }

@@ -105,7 +105,7 @@ learningCurve := OrderedCollection new.
 f := [ :x | (-2 * x) - 3 ].
 0 to: 2000 by: 10 do: [ :nbOfTrained |
   r := Random new seed: 42.
-  p := self new.
+  p := self new step.
   "There is some kind of subtle semantic or compiler issue with 
   passing in a literal array of integers.
   The array structure is allowed to persist, and then it gets changed,

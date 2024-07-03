@@ -99,6 +99,18 @@ NNetwork >> learningRate: aLearningRate [
 layers do: [ :l | l learningRate: aLearningRate ].
 ]
 
+{ #category : #helpers }
+NNetwork >> numberOfInputs [
+  "Return the number of inputs the network has."
+  ^ layers first neurons size
+]
+
+{ #category : #helpers }
+NNetwork >> numberOfNeurons [
+  "Return the total number of neurons the network has."
+  ^ (layers collect: #numberOfNeurons) sum
+]
+
 { #category : #accessing }
 NNetwork >> numberOfOutputs [
 "Return the number of outputs of the network."
@@ -162,4 +174,83 @@ NNetwork >> train: train nbEpochs: nbEpochs [
 NNetwork >> updateWeight: initialInputs [
   "Update the weights of the neurons using the initial inputs."
   layers first updateWeight: initialInputs.
+]
+
+{ #category : #training }
+NNetwork >> viewLearningCurve [
+  "Draw the error and precision curve."
+  | b ds |
+  "No need to draw anything if the network has not been run."
+  errors 
+    ifEmpty: [ ^ RTView new
+	              add: (RTLabel elementOn: 'Should first run the network.');
+	              yourself ].
+  b := RTDoubleGrapher new.
+
+  "We define the size of the charting area"
+  b extent: 500 @ 300.
+  ds := RTData new.
+  "A simple optimization that Roassal offers."
+  ds samplingIfMoreThan: 2000.
+  "No need of dots, simply a curve."
+  ds noDot; connectColor: Color blue.
+  ds points: (errors collectWithIndex: [ :y :i | i -> y ]).
+  ds x: #key.
+  ds y: #value.
+  ds dotShape rectangle color: Color blue.
+  b add: ds.
+  ds := RTData new.
+  ds samplingIfMoreThan: 2000.
+  ds noDot.
+  ds connectColor: Color red.
+  ds points: (precisions collectWithIndex: [ :y :i | i-> y ]).
+  ds x: #key.
+  ds y: #value.
+  ds dotShape rectangle color: Color blue.
+  b addRight: ds.
+  b axisX noDecimal; title: 'Epoch'.
+  b axisY title: 'Error'.
+  b axisYRight title: 'Precision'; color: Color red.
+  ^ b.
+]
+
+{ #category : #training }
+NNetwork >> viewLearningCurveIn: composite [
+  <gtInspectorPresentationOrder: -10>
+  composite roassal2
+    title: 'Learning';
+    initializeView: [ self viewLearningCurve ].
+]
+
+{ #category : #training }
+NNetwork >> viewNetwork [
+  | b lb |
+  b := RTMondrian new.
+  
+  b nodes: layers 
+    forEach: [ :aLayer | 
+	            b shape circle size: 20.
+	            b nodes: aLayer neurons.
+	            b layout verticalLine. ].
+
+  b shape arrowedLine; withShorterDistanceAttachPoint.
+  b edges connectTo: #nextLayer.
+  b layout horizontalLine gapSize: 30; center.
+
+  b build.
+
+  lb := RTLegendBuilder new.
+  lb view: b view.
+  lb addText: self numberOfNeurons asString, ' neurons'.
+  lb addText: self numberOfInputs asString, ' inputs'.
+  lb build.
+  ^ b view.
+]
+
+{ #category : #training }
+NNetwork >> viewNetworkIn: composite [ 
+  <gtInspectorPresentationOrder: -5>
+  composite roassal2 
+    title: 'Network';
+    initializeView: [ self viewNetwork ].
 ]
